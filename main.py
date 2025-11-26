@@ -3,8 +3,9 @@ from paddleocr import PaddleOCR
 import cv2
 import imutils
 import re
+from client_update import send_plate_to_web
 
-image = cv2.imread('C:\\Users\\Lizeth\\OneDrive\\Escritorio\\v6-ANPR\\placa10.png')
+image = cv2.imread('C:\\Users\\Lizeth\\OneDrive\\Escritorio\\v6-ANPR\\placaxd2.jpeg')
 
 model = YOLO("C:\\Users\\Lizeth\\OneDrive\\Escritorio\\v6-ANPR\\runs\\detect\\train\\weights\\best.pt")
 ocr = PaddleOCR(use_angle_cls=True, lang='en')
@@ -41,6 +42,9 @@ for result in results:
             cv2.rectangle(image, (x1-10, y1-35), (x2+10, y2-(y2-y1)), (0, 255, 0), -1)
             cv2.rectangle(image, (x1,y1), (x2,y2), (0,255,0), 2)
             cv2.putText(image, placa_limpia, (x1-7, y1-5), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,0), 2)
+
+            if placa_limpia:
+                send_plate_to_web(placa_limpia)
 
 cv2.imshow("Image", imutils.resize(image, width=720))
 cv2.waitKey(0)
