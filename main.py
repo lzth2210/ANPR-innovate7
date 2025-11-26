@@ -4,7 +4,7 @@ import cv2
 import imutils
 import re
 
-image = cv2.imread('C:\\Users\\Lizeth\\OneDrive\\Escritorio\\v6-ANPR\\placa4.png')
+image = cv2.imread('C:\\Users\\Lizeth\\OneDrive\\Escritorio\\v6-ANPR\\placa10.png')
 
 model = YOLO("C:\\Users\\Lizeth\\OneDrive\\Escritorio\\v6-ANPR\\runs\\detect\\train\\weights\\best.pt")
 ocr = PaddleOCR(use_angle_cls=True, lang='en')
@@ -33,13 +33,14 @@ for result in results:
             whitelist_pattern = re.compile(r'^[A-Z0-9]+$')
             left_to_right = ''.join([t for _, t in left_to_right])
             output_text = ''.join([t for t in left_to_right if whitelist_pattern.fullmatch(t) ])
-            print(f"output_text: {output_text}")
+            placa_limpia = output_text[:6]
+            print(f"output_text: {placa_limpia}")
 
             cv2.imshow("plate_image", plate_image)
 
             cv2.rectangle(image, (x1-10, y1-35), (x2+10, y2-(y2-y1)), (0, 255, 0), -1)
             cv2.rectangle(image, (x1,y1), (x2,y2), (0,255,0), 2)
-            cv2.putText(image, output_text, (x1-7, y1-5), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,0), 2)
+            cv2.putText(image, placa_limpia, (x1-7, y1-5), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,0), 2)
 
 cv2.imshow("Image", imutils.resize(image, width=720))
 cv2.waitKey(0)
